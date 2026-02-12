@@ -1,105 +1,85 @@
-# Solana Mobile Expo Template
+# SolFlux ⚡
 
-This template is a ready-to-go Android Expo dApp that offers:
+**Proof-of-Moment Social Platform on Solana Mobile**
 
-- Solana libraries: `web3.js`, Mobile Wallet Adapter, and `spl-token`.
-- Required polyfills like `crypto` and `Buffer` configured.
-- Pre-built React UI and re-usable hooks and code patterns like `useMobileWallet`.
+SolFlux is a mobile-native social app built for the **Solana Mobile MONOLITH Hackathon**. It allows users to capture real-world moments, mint them as compressed NFTs (cNFTs) with GPS and timestamp metadata, and share them in a token-gated social feed.
 
-**This is only fully functional on Android.**
+![Solana Mobile](https://img.shields.io/badge/Solana%20Mobile-Expo%20SDK%2054-9945FF?style=for-the-badge&logo=solana)
+![Status](https://img.shields.io/badge/Status-Protoype-14F195?style=for-the-badge)
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="./screenshots/screenshot1.png" alt="Scaffold dApp Screenshot 1" width=300 />
-    </td>
-    <td align="center">
-      <img src="./screenshots/screenshot2.png" alt="Scaffold dApp Screenshot 2" width=300 />
-    </td>
-    <td align="center">
-      <img src="./screenshots/screenshot3.png" alt="Scaffold dApp Screenshot 3" width=300 />
-    </td>
-  </tr>
-</table>
+## 🚀 Key Features
 
-## Tech Stack
+- **📸 Proof-of-Moment**: Capture photos with embedded GPS & timestamp metadata.
+- **⚡ Instant Minting**: Mint moments as **Compressed NFTs (cNFTs)** using Metaplex Bubblegum (sub-cent cost).
+- **💸 SKR Economy**: 
+  - **Burn-to-Mint**: Costs 1 SKR to mint a moment (deflationary).
+  - **Tip-to-Support**: Users can tip creators in SKR directly from the feed.
+- **📱 Mobile Native**: 
+  - Built with **React Native (Expo SDK 54)**.
+  - **Mobile Wallet Adapter (MWA)** for secure transaction signing.
+  - **AMOLED Dark Mode** optimized for mobile displays.
+- **📍 Location-Based**: Feed displays location context for every moment.
 
-| Library               | Category          | Version | Description                                           |
-| --------------------- | ----------------- | ------- | ----------------------------------------------------- |
-| React Native          | Mobile Framework  | v0.76   | The best cross-platform mobile framework              |
-| Expo                  | SDK               | v52     | Allows (optional) Expo modules                        |
-| React                 | UI Framework      | v18.3   | The most popular UI framework in the world            |
-| Mobile Wallet Adapter | SDK               | v2.1    | Connect and request signing from mobile wallet apps   |
-| Solana web3.js        | SDK               | v1.78   | General Solana library for transactions and RPCs      |
-| spl-token             | SDK               | v0.4    | Library for building with Solana SPL tokens           |
-| React Native Paper    | Component Library | v5.12   | Production-ready components following Material Design |
-| React Navigation      | Navigation        | v6      | Performant and consistent navigation framework        |
-| React Query           | State management  | v5.24   | Async query management                                |
-| TypeScript            | Language          | v5      | Static typechecking                                   |
-| AsyncStorage          | Persistence       | v1.23   | State persistence                                     |
+## 🛠️ Tech Stack
 
-## Quick Start
+- **Frontend**: React Native, Expo, TypeScript
+- **Blockchain**: Solana Web3.js, Metaplex Bubblegum, SPL Token
+- **Data Integrations**: 
+  - **Helius DAS API**: High-performance asset indexing and feed retrieval.
+  - **IPFS (NFT.Storage)**: Decentralized image and metadata storage.
+- **Wallet**: Solana Mobile Wallet Adapter (compatible with Phantom, Solflare, etc.).
+
+## 📦 Installation & Setup
 
 ### Prerequisites
+- **Node.js** (v18+)
+- **Expo Go** app on your Android Phone
+- **Android Device** (Solana Mobile Saga/Seeker recommended, or any Android phone)
 
-- A free [Expo](https://expo.dev/) account.
-- An Android device/emulator to test your app
-  - Install an MWA compliant wallet app on your device/emulator.
-- If using Expo's cloud service `eas build`, no further setup is required.
-- If building locally:
-  - React Native and Android Envrionment [setup](https://docs.solanamobile.com/getting-started/development-setup)
-
-### Initialize
-
-Run the CLI command:
-
-```
-yarn create expo-app --template @solana-mobile/solana-mobile-expo-template
+### 1. Clone & Install
+```bash
+git clone https://github.com/HyperionBurn/SolFlux.git
+cd SolFlux
+npm install
 ```
 
-Choose your project name then navigate into the directory.
+### 2. Configure Environment
+Create a `.env` file (or update `src/config/constants.ts`):
+```env
+HELIUS_API_KEY=your_key_here
+NFT_STORAGE_API_KEY=your_key_here
+```
 
-### Build and run the app
+### 3. Run the App
 
-Once your app is initialized, follow the **["Running the app"](https://docs.solanamobile.com/react-native/expo#running-the-app)** guide to launch the template as a custom development build.
+#### Option A: Expo Go (Quick UI Test)
+Ideal for testing UI (Feed, Profile, Navigation). **Note: Wallet connection & Minting will NOT work** in Expo Go due to native module requirements.
+```bash
+npx expo start --go --clear
+```
+Scan the QR code with Expo Go.
 
-## Troubleshooting
+#### Option B: Development Build (Full Features)
+Required for **Wallet Connection**, **Camera**, and **Minting**.
+```bash
+# Build the APK
+npx eas build --profile development --platform android
 
-- `Metro has encountered an error: While trying to resolve module @solana-mobile/mobile-wallet-adapter-protocol...`
+# Install on your device and run:
+npx expo start --dev-client
+```
 
-  - This is an on-going issue when using `npm install` to install the Expo template.
-  - To mitigate, clean your project dependencies and reinstall with `yarn install`
+## 🏗️ Architecture
 
-- `The package 'solana-mobile-wallet-adapter-protocol' doesn't seem to be linked. Make sure: ...`
+```mermaid
+graph TD
+    User[User] -->|Captures Photo| App
+    App -->|Uploads Image| IPFS[NFT.Storage]
+    App -->|Mint Transaction| MWA[Mobile Wallet Adapter]
+    MWA -->|Signs| Solana[Solana Blockchain]
+    Solana -->|Indexes| Helius[Helius DAS API]
+    Helius -->|Feeds Data| App
+```
 
-  - Ensure you are _NOT_ using Expo Go to run your app.
-  - You need to be using an [Expo custom development build](https://docs.solanamobile.com/react-native/expo#custom-development-build), rather than Expo Go.
-
-- `failed to connect to...`
-
-  - This is an Expo error that can occur when trying to connect to the dev server on certain Wifi networks.
-  - To fix, try starting the dev server with the `--tunnel` command (`npx expo start --dev-client --tunnel`)
-
-- `Error: crypto.getRandomValues() not supported`
-  - This is a polyfill issue when trying to use certain functions from the `@solana/web3.js` in a React Native/Expo environment.
-  - To fix, ensure your App properly imports and uses the polyfills like in this [guide](http://docs.solanamobile.com/react-native/expo#step-3-update-appjs-with-polyfills).
-
-<br>
-
-- `error Failed to load configuration of your project.`
-  - Same as above, but for `yarn`. [Uninstall and reinstall](https://github.com/react-native-community/cli#updating-the-cli) the CLI through yarn.
-
-<br>
-
-- `Looks like your iOS environment is not properly set`:
-  - You can ignore this during template initialization and build the Android app as normal. This template is only compatible with Android.
-
-<br>
-
-- `Usage Error: It seems you are trying to add a package using a https:... url; we now require package names to be explicitly specified.`
-  - This error happens on certain versions of `yarn`, and occurs if you try to initialize the template through the Github repo URL, rather than the npm package. To avoid this, use the `@solana-mobile/solana-mobile-dapp-scaffold` package as specified, or downgrade your `yarn` version to classic (1.22.x).
-
-<br>
-
-- `error Couldn't find the ".../@solana-mobile/solana-mobile-dapp-scaffold/template.config.js file inside "@solana-mobile/solana-mobile-dapp-scaffold" template.`
-  - This is a [known error](https://github.com/react-native-community/cli/issues/1924) that occurs with certain versions of `yarn` (>= 3.5.0). It is fixed by running the cli command with the `--npm` flag or downgrading your version of `yarn`.
+## 📜 License
+MIT License. Built for the Solana Mobile Hackathon 2026.
